@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Sender - Upload CSV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="file"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .features { margin-top: 30px; background: #f9f9f9; padding: 15px; border-radius: 5px; }
+        .feature-item { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Sender - Upload CSV</h1>
+        <p>Upload a CSV file containing email addresses to send promotional emails about your WooCommerce distance-based pricing plugin.</p>
+        
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="csv_file">CSV File with Email Addresses:</label>
+                <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                <small>The CSV should contain a column with email addresses (column name: email, Email, EMAIL, email_address, or Email Address)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="batch_size">Batch Size (emails per batch):</label>
+                <input type="number" id="batch_size" name="batch_size" min="10" max="100" value="50">
+                <small>Recommended: 50 emails per batch to avoid triggering spam filters</small>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit">Upload and Send</button>
+            </div>
+        </form>
+        
+        <div class="features">
+            <h3>Features:</h3>
+            <div class="feature-item">✅ Send emails in batches to avoid spam filters</div>
+            <div class="feature-item">✅ Track email opens and clicks</div>
+            <div class="feature-item">✅ Respect daily sending limits (2000 emails/day)</div>
+            <div class="feature-item">✅ Respect monthly sending limits (60,000 emails/month)</div>
+            <div class="feature-item">✅ Personalized content for better engagement</div>
+            <div class="feature-item">✅ Automatic unsubscribe handling</div>
+        </div>
+        
+        <p style="margin-top: 20px;">
+            <a href="/batch">Advanced Batch Processing</a> | 
+            <a href="/stats">View Email Statistics</a>
+        </p>
+    </div>
+</body>
+</html>
+            

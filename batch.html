@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Batch Email Processing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .file-list { margin-top: 20px; }
+        .file-item { padding: 10px; border-bottom: 1px solid #eee; }
+        .status { margin-top: 20px; padding: 15px; background: #e7f3fe; border-left: 5px solid #2196F3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Batch Email Processing</h1>
+        
+        <div class="status">
+            <h3>Current Status</h3>
+            <p>Emails sent today: {{ sent_today }}</p>
+            <p>Remaining emails for today: {{ remaining_today }}</p>
+        </div>
+        
+        <form id="batchForm">
+            <div class="form-group">
+                <label for="csvFile">Select CSV File:</label>
+                <select id="csvFile" name="csvFile" required>
+                    <option value="">-- Select a file --</option>
+                    {% for file in csv_files %}
+                    <option value="{{ file.path }}">{{ file.name }} ({{ file.size }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="batchSize">Batch Size:</label>
+                <input type="number" id="batchSize" name="batchSize" min="10" max="100" value="{{ default_batch_size }}" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" id="startBatch">Start Batch Processing</button>
+            </div>
+        </form>
+        
+        <div id="result" style="margin-top: 20px; display: none;">
+            <h3>Processing Results</h3>
+            <div id="resultContent"></div>
+        </div>
+        
+        <div class="file-list">
+            <h3>Available CSV Files</h3>
+            {% if csv_files %}
+                {% for file in csv_files %}
+                <div class="file-item">
+                    <strong>{{ file.name }}</strong> ({{ file.size }})
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No CSV files found. Please upload a file first.</p>
+            {% endif %}
+        </div>
+        
+        <p style="margin-top: 20px;">
+            <a href="/">Back to File Upload</a> | 
+            <a href="/stats">View Statistics</a>
+        </p>
+    </div>
+    
+    <script>
+        document.getElementById('startBatch').addEventListener('click', function() {
+            const csvFile = document.getElementById('csvFile').value;
+            const batchSize = document.getElementById('batchSize').value;
+            
+            if (!csvFile) {
+                alert('Please select a CSV file');
+                return;
+            }
+            
+            // Display loading message
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            document.getElementById('resultContent').innerHTML = '<p>Processing emails, please wait...</p>';
+            
+            // Make API call to process batch
+            fetch(`/process/${csvFile}?batch_size=${batchSize}`)
+                .then(response => response.json())
+                .then(data => {
+                    let resultHTML = '';
+                    
+                    if (data.status === 'success') {
+                        resultHTML = `
+                            <div style="background-color: #dff0d8; padding: 15px; border-radius: 4px;">
+                                <p><strong>Success!</strong></p>
+                                <p>Emails sent: ${data.sent}</p>
+                                <p>Emails skipped: ${data.skipped}</p>
+                                <p>Batches processed: ${data.batches_processed}</p>
+                                <p>Remaining emails for today: ${data.remaining_today}</p>
+                            </div>
+                        `;
+                    } else {
+                        resultHTML = `
+                            <div style="background-color: #f2dede; padding: 15px; border-radius: 4px;">
+                                <p><strong>Error:</strong> ${data.message}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    document.getElementById('resultContent').innerHTML = resultHTML;
+                })
+                .catch(error => {
+                    document.getElementById('resultContent').innerHTML = `
+                        <div style="background-color: #f2dede; padding: 15px; border-radius: 4px;">
+                            <p><strong>Error:</strong> ${error.message}</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>
+            

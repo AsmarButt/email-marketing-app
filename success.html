@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Sending Complete</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .success-box { background-color: #dff0d8; padding: 15px; border-radius: 4px; margin-top: 20px; }
+        .stats { margin-top: 30px; }
+        .stat-item { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Sending Complete</h1>
+        
+        <div class="success-box">
+            <p><strong>Success!</strong> Your emails are being processed.</p>
+        </div>
+        
+        <div class="stats">
+            <h3>Results:</h3>
+            <div class="stat-item">Emails sent: {{ sent }}</div>
+            <div class="stat-item">Emails skipped (already sent or invalid): {{ skipped }}</div>
+            <div class="stat-item">Batches processed: {{ batches }}</div>
+            <div class="stat-item">Remaining emails allowed today: {{ remaining }}</div>
+        </div>
+        
+        <p style="margin-top: 30px;">
+            <a href="/">Back to Upload</a> | 
+            <a href="/stats">View Email Statistics</a> |
+            <a href="/batch">Advanced Batch Processing</a>
+        </p>
+    </div>
+</body>
+</html>
+            
